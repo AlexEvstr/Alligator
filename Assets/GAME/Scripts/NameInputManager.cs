@@ -5,9 +5,11 @@ public class NameInputManager : MonoBehaviour
 {
     public InputField[] nameFields; // 6 полей ввода имен
     public Button[] addButtons; // 4 кнопки "Add"
+    private MenuController _menuController;
 
     private void Start()
     {
+        _menuController = GetComponent<MenuController>();
         // Загружаем сохраненные имена из PlayerPrefs
         for (int i = 0; i < nameFields.Length; i++)
         {
@@ -24,6 +26,8 @@ public class NameInputManager : MonoBehaviour
         {
             addButtons[i].gameObject.SetActive(false);
         }
+
+        ResetToDefaultState();
     }
 
     // Метод для добавления нового поля
@@ -49,20 +53,31 @@ public class NameInputManager : MonoBehaviour
             PlayerPrefs.SetString("PlayerName" + i, nameFields[i].text);
         }
         PlayerPrefs.Save();
+        if (nameFields[0].text != "" && !nameFields[0].text.Contains("name") && nameFields[1].text != "" && !nameFields[1].text.Contains("name"))
+        _menuController.StartGameButton();
     }
 
     public void ResetToDefaultState()
     {
+        // Удаляем все сохраненные имена из PlayerPrefs
+        for (int i = 0; i < nameFields.Length; i++)
+        {
+            PlayerPrefs.DeleteKey("PlayerName" + i);
+            nameFields[i].text = "";
+        }
+        PlayerPrefs.Save(); // Сохраняем изменения
+
         // Отключаем все дополнительные поля
         for (int i = 2; i < nameFields.Length; i++)
         {
             nameFields[i].gameObject.SetActive(false);
         }
 
-        // Включаем первые два поля
+        // Включаем только первые два поля
         for (int i = 0; i < 2; i++)
         {
             nameFields[i].gameObject.SetActive(true);
+            nameFields[i].text = ""; // Очищаем текстовые поля
         }
 
         // Прячем все кнопки "Add" кроме первой
@@ -74,5 +89,6 @@ public class NameInputManager : MonoBehaviour
         // Включаем первую кнопку "Add"
         addButtons[0].gameObject.SetActive(true);
     }
+
 
 }
