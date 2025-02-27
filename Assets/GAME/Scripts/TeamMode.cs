@@ -12,6 +12,7 @@ public class TeamMode : MonoBehaviour
     public GameObject timeUpText, nextTeamPanel, teamResultsPanel;
     public GameObject[] teamResultCells;
     public GameObject CoinWithScore;
+    public GameObject _pausePopup;
 
     private List<string> _words;
     private int _currentWordIndex = 0;
@@ -132,9 +133,13 @@ public class TeamMode : MonoBehaviour
     {
         while (_timer > 0)
         {
-            timerText.text = $"{(int)_timer / 60}:{(int)_timer % 60:D2}";
-            yield return new WaitForSeconds(1);
-            _timer--;
+            if (!_pausePopup.activeInHierarchy)
+            {
+                timerText.text = $"{(int)_timer / 60}:{(int)_timer % 60:D2}";
+                yield return new WaitForSeconds(1);
+                _timer--;
+            }
+            yield return null;
         }
         EndTeamTurn();
     }

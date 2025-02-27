@@ -76,6 +76,8 @@ public class OptionsController : MonoBehaviour
         _themeIndex = PlayerPrefs.GetInt("ThemeIndex", 0);
         if (_themeIndex == 0) SwithThemeToLight();
         else SwithThemeToDark();
+
+        
     }
 
     public void DisableSound()
