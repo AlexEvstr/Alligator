@@ -14,8 +14,7 @@ public class ForAWhileMode : MonoBehaviour
     private List<string> _words;
     private int _currentWordIndex = 0;
     private int _score = 0;
-    private float _timer = 12f; // 2 минуты
-    private bool _isTimerRunning = false;
+    private float _timer = 120f; // 2 минуты
 
     [SerializeField] private GameObject _pausePopup;
 
@@ -71,7 +70,6 @@ public class ForAWhileMode : MonoBehaviour
 
     private IEnumerator TimerCoroutine()
     {
-        _isTimerRunning = true;
         while (_timer > 0)
         {
             if (!_pausePopup.activeInHierarchy)
@@ -82,7 +80,6 @@ public class ForAWhileMode : MonoBehaviour
             }
             yield return null;
         }
-        _isTimerRunning = false;
         GameOver();
         FinishObject.SetActive(true);
     }

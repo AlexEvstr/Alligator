@@ -7,16 +7,16 @@ using System.Linq;
 public class TeamMode : MonoBehaviour
 {
     public WordManager wordManager;
-    public Text wordText, scoreText, titleText, timerText, teamScoreText, teamNameText, skipText;
-    public Button guessedRightButton, skipButton, nextTeamButton;
+    public Text wordText, scoreText, titleText, timerText, teamScoreText, teamNameText, skipText, finishScoreText;
+    public Button guessedRightButton, skipButton, nextTeamButton, resultsButton;
     public GameObject timeUpText, nextTeamPanel, teamResultsPanel;
-    public Transform teamResultsContainer;
-    public GameObject teamResultPrefab;
+    public GameObject[] teamResultCells;
+    public GameObject CoinWithScore;
 
     private List<string> _words;
     private int _currentWordIndex = 0;
     private int _score = 0;
-    private float _timer = 60f;
+    private float _timer = 60f; // 1 минута
     private int _skipCount = 0;
     private string[] _teamNames = new string[6];
     private int[] _teamScores = new int[6];
@@ -34,7 +34,7 @@ public class TeamMode : MonoBehaviour
 
     private void LoadWords(int categoryType)
     {
-        if (categoryType == 8)
+        if (categoryType == 8) // Режим Random Words
         {
             _words = wordManager.categories.SelectMany(c => c.words).OrderBy(x => Random.value).ToList();
         }
@@ -75,21 +75,45 @@ public class TeamMode : MonoBehaviour
             return;
         }
 
+        // Обновляем UI
         teamNameText.text = _teamNames[_currentTeamIndex];
         _score = 0;
-        scoreText.text = "Score: 0";
+        scoreText.text = "0";
+        finishScoreText.text = _teamScores[_currentTeamIndex].ToString(); // Показываем очки с прошлого раунда
         _skipCount = 0;
         skipText.text = "Skip 0/3";
         timeUpText.SetActive(false);
         nextTeamPanel.SetActive(false);
         skipButton.interactable = true;
+        guessedRightButton.interactable = true;
+        wordText.text = "";
+
+        ShowNextWord();
         StartCoroutine(TimerCoroutine());
+    }
+
+    private void ShowNextWord()
+    {
+        if (_currentWordIndex < _words.Count)
+        {
+            wordText.text = _words[_currentWordIndex];
+            _currentWordIndex++;
+        }
+        else
+        {
+            _currentWordIndex = 0; // Слова закончились → перемешиваем и заново
+            _words = _words.OrderBy(x => Random.value).ToList();
+            ShowNextWord();
+        }
     }
 
     public void OnGuessedRight()
     {
+        _teamScores[_currentTeamIndex] += 1;
+        finishScoreText.text = _teamScores[_currentTeamIndex].ToString();
         _score++;
-        scoreText.text = "Score: " + _score;
+        scoreText.text = _score.ToString();
+        
         ShowNextWord();
     }
 
@@ -112,29 +136,70 @@ public class TeamMode : MonoBehaviour
             yield return new WaitForSeconds(1);
             _timer--;
         }
+        EndTeamTurn();
+    }
+
+    private void EndTeamTurn()
+    {
+        // Сохраняем очки команды
+        
+
+        // Выключаем ненужные элементы
+        timerText.gameObject.SetActive(false);
+        guessedRightButton.gameObject.SetActive(false);
+        skipButton.gameObject.SetActive(false);
         timeUpText.SetActive(true);
-        _teamScores[_currentTeamIndex] += _score;
+        nextTeamPanel.SetActive(true);
+        CoinWithScore.SetActive(true);
+        wordText.text = "";
+
+        if (_roundsPlayed+1 >= _maxRounds)
+        {
+            if (_currentTeamIndex+1 >= _teamNames.Length || (string.IsNullOrEmpty(_teamNames[_currentTeamIndex + 1])))
+            {
+                nextTeamButton.gameObject.SetActive(false);
+                resultsButton.gameObject.SetActive(true);
+            } 
+        }
+    }
+
+    public void OnNextTeam()
+    {
+        _timer = 60f; // Сбрасываем таймер
+        CoinWithScore.SetActive(false);
+        timerText.gameObject.SetActive(true);
+        guessedRightButton.gameObject.SetActive(true);
+        skipButton.gameObject.SetActive(true);
+        timeUpText.SetActive(false);
+        nextTeamPanel.SetActive(false);
         _currentTeamIndex++;
         ShowNextTeam();
     }
 
     private void ShowFinalResults()
     {
-        Debug.Log("Game Over");
-    }
+        teamResultsPanel.SetActive(true);
 
-    private void ShowNextWord()
-    {
-        if (_currentWordIndex < _words.Count)
+        var sortedTeams = _teamScores
+            .Select((score, index) => new { Score = score, Name = _teamNames[index] })
+            .OrderByDescending(t => t.Score)
+            .Where(t => !string.IsNullOrEmpty(t.Name))
+            .ToList();
+
+        // Выключаем лишние ячейки
+        int totalTeams = sortedTeams.Count;
+        for (int i = 0; i < teamResultCells.Length; i++)
         {
-            wordText.text = _words[_currentWordIndex];
-            _currentWordIndex++;
-        }
-        else
-        {
-            _currentWordIndex = 0; // Перемешиваем и показываем заново
-            _words = _words.OrderBy(x => Random.value).ToList();
-            ShowNextWord();
+            if (i >= totalTeams)
+            {
+                teamResultCells[i].SetActive(false);
+            }
+            else
+            {
+                teamResultCells[i].SetActive(true);
+                teamResultCells[i].transform.GetChild(0).GetComponent<Text>().text = sortedTeams[i].Name; // Название команды
+                teamResultCells[i].transform.GetChild(1).GetComponent<Text>().text = sortedTeams[i].Score.ToString(); // Очки
+            }
         }
     }
 }

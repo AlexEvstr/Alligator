@@ -6,6 +6,7 @@ public class NameInputManager : MonoBehaviour
     public InputField[] nameFields; // 6 полей ввода имен
     public Button[] addButtons; // 4 кнопки "Add"
     private MenuController _menuController;
+    [SerializeField] private Button _saveBtn;
 
     private void Start()
     {
@@ -53,7 +54,7 @@ public class NameInputManager : MonoBehaviour
             PlayerPrefs.SetString("PlayerName" + i, nameFields[i].text);
         }
         PlayerPrefs.Save();
-        if (nameFields[0].text != "" && !nameFields[0].text.Contains("name") && nameFields[1].text != "" && !nameFields[1].text.Contains("name"))
+        
         _menuController.StartGameButton();
     }
 
@@ -88,7 +89,14 @@ public class NameInputManager : MonoBehaviour
 
         // Включаем первую кнопку "Add"
         addButtons[0].gameObject.SetActive(true);
+        _saveBtn.interactable = false;
     }
 
-
+    private void Update()
+    {
+        if (nameFields[0].text != "" && !nameFields[0].text.Contains("name") && nameFields[1].text != "" && !nameFields[1].text.Contains("name"))
+        {
+            _saveBtn.interactable = true;
+        }
+    }
 }
