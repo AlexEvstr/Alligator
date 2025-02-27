@@ -14,6 +14,8 @@ public class ClassicalMode : MonoBehaviour
     private int _currentWordIndex = 0;
     private int _score = 0;
 
+    public OptionsController optionsController;
+
     private void Start()
     {
         int _categoryType = PlayerPrefs.GetInt("CategoryType", 0);
@@ -43,6 +45,9 @@ public class ClassicalMode : MonoBehaviour
         }
         else
         {
+            optionsController.PlayEndTimeSound();
+            optionsController.DisableBGMusic();
+            optionsController.PlayWinSound();
             wordText.text = "";
             FinishObject.SetActive(true);
             FinishObject.SetActive(true);

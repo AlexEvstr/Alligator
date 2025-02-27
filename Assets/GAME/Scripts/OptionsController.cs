@@ -19,9 +19,11 @@ public class OptionsController : MonoBehaviour
     [SerializeField] private GameObject _backBtn;
     [SerializeField] private GameObject _saveBtn;
 
-    [SerializeField] private AudioClip _chick;
+    [SerializeField] private AudioClip _tic;
+    [SerializeField] private AudioClip _endTime;
     [SerializeField] private AudioClip _win;
     [SerializeField] private AudioClip _correct;
+    [SerializeField] private AudioClip _wrong;
 
     [SerializeField] private GameObject _lightTheme;
     [SerializeField] private GameObject _darkTheme;
@@ -162,7 +164,7 @@ public class OptionsController : MonoBehaviour
     public void PlayChickSound()
     {
         if (_vibration == 1) Vibration.VibratePop();
-        _soundController.PlayOneShot(_chick);
+        _soundController.PlayOneShot(_tic);
     }
 
     public void PlayCorretcSound()
@@ -180,6 +182,18 @@ public class OptionsController : MonoBehaviour
     {
         if (_vibration == 1) Vibration.Vibrate();
         _soundController.PlayOneShot(_win);
+    }
+
+    public void PlayEndTimeSound()
+    {
+        if (_vibration == 1) Vibration.Vibrate();
+        _soundController.PlayOneShot(_endTime);
+    }
+
+    public void PlayWrongSound()
+    {
+        if (_vibration == 1) Vibration.Vibrate();
+        _soundController.PlayOneShot(_wrong);
     }
 
     public void SwithThemeToLight()

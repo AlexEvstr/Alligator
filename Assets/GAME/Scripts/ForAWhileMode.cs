@@ -14,9 +14,10 @@ public class ForAWhileMode : MonoBehaviour
     private List<string> _words;
     private int _currentWordIndex = 0;
     private int _score = 0;
-    private float _timer = 120f; // 2 минуты
+    private float _timer = 12f; // 2 минуты
 
     [SerializeField] private GameObject _pausePopup;
+    public OptionsController optionsController;
 
     private void Start()
     {
@@ -48,8 +49,10 @@ public class ForAWhileMode : MonoBehaviour
         }
         else
         {
-            Debug.Log("GameType_3_GameOver");
             GameOver();
+            optionsController.PlayEndTimeSound();
+            optionsController.DisableBGMusic();
+            optionsController.PlayWinSound();
             finish2.SetActive(true);
         }
     }
@@ -75,11 +78,16 @@ public class ForAWhileMode : MonoBehaviour
             if (!_pausePopup.activeInHierarchy)
             {
                 timerText.text = $"{(int)_timer / 60}:{(int)_timer % 60:D2}";
+                if (_timer == 1 || _timer == 2 || _timer == 3) optionsController.PlayChickSound();
+                
                 yield return new WaitForSeconds(1);
                 _timer--;
+                if (_timer == 0) optionsController.PlayEndTimeSound();
             }
             yield return null;
         }
+        optionsController.DisableBGMusic();
+        optionsController.PlayWinSound();
         GameOver();
         FinishObject.SetActive(true);
     }
@@ -87,7 +95,6 @@ public class ForAWhileMode : MonoBehaviour
     private void GameOver()
     {
         wordText.text = "";
-        Debug.Log("GameType_3_GameOver");
         timerText.gameObject.SetActive(false);
         guessedRightButton.gameObject.SetActive(false);
         skipButton.gameObject.SetActive(false);

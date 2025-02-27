@@ -17,13 +17,14 @@ public class TeamMode : MonoBehaviour
     private List<string> _words;
     private int _currentWordIndex = 0;
     private int _score = 0;
-    private float _timer = 60f; // 1 минута
+    private float _timer = 6f; // 1 минута
     private int _skipCount = 0;
     private string[] _teamNames = new string[6];
     private int[] _teamScores = new int[6];
     private int _currentTeamIndex = 0;
     private int _roundsPlayed = 0;
     private const int _maxRounds = 3;
+    public OptionsController optionsController;
 
     private void Start()
     {
@@ -65,6 +66,8 @@ public class TeamMode : MonoBehaviour
         if (_roundsPlayed >= _maxRounds)
         {
             ShowFinalResults();
+            optionsController.DisableBGMusic();
+            optionsController.PlayWinSound();
             return;
         }
 
@@ -136,8 +139,11 @@ public class TeamMode : MonoBehaviour
             if (!_pausePopup.activeInHierarchy)
             {
                 timerText.text = $"{(int)_timer / 60}:{(int)_timer % 60:D2}";
+                if (_timer == 1 || _timer == 2 || _timer == 3) optionsController.PlayChickSound();
+                
                 yield return new WaitForSeconds(1);
                 _timer--;
+                if (_timer == 0) optionsController.PlayEndTimeSound();
             }
             yield return null;
         }
@@ -170,7 +176,7 @@ public class TeamMode : MonoBehaviour
 
     public void OnNextTeam()
     {
-        _timer = 60f; // Сбрасываем таймер
+        _timer = 6f; // Сбрасываем таймер
         CoinWithScore.SetActive(false);
         timerText.gameObject.SetActive(true);
         guessedRightButton.gameObject.SetActive(true);
