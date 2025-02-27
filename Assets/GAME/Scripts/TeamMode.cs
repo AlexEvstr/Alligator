@@ -34,7 +34,7 @@ public class TeamMode : MonoBehaviour
 
     private void LoadWords(int categoryType)
     {
-        if (categoryType == 9)
+        if (categoryType == 8)
         {
             _words = wordManager.categories.SelectMany(c => c.words).OrderBy(x => Random.value).ToList();
         }

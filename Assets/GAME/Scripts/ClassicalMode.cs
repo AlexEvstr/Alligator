@@ -18,13 +18,13 @@ public class ClassicalMode : MonoBehaviour
     {
         int _categoryType = PlayerPrefs.GetInt("CategoryType", 0);
         LoadWords(_categoryType);
-        titleText.text = (_categoryType == 9) ? "Random Words" : wordManager.categories[_categoryType].categoryName;
+        titleText.text = (_categoryType == 8) ? "Random Words" : wordManager.categories[_categoryType].categoryName;
         ShowNextWord();
     }
 
     private void LoadWords(int categoryType)
     {
-        if (categoryType == 9)
+        if (categoryType == 8)
         {
             _words = wordManager.categories.SelectMany(c => c.words).OrderBy(x => Random.value).ToList();
         }
@@ -36,7 +36,7 @@ public class ClassicalMode : MonoBehaviour
 
     private void ShowNextWord()
     {
-        if (_currentWordIndex < _words.Count)
+        if (_currentWordIndex < 20)
         {
             wordText.text = _words[_currentWordIndex];
             _currentWordIndex++;
