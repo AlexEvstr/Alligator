@@ -3781,7 +3781,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1133335758
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3826,11 +3826,13 @@ MonoBehaviour:
   titleText: {fileID: 769840081}
   timerText: {fileID: 1130020348}
   finishScoreText: {fileID: 261703649}
+  finishScoreText2: {fileID: 263680589}
   guessedRightButton: {fileID: 253242749}
   skipButton: {fileID: 2006947442}
   FinishObject: {fileID: 1241774673}
   AgainBtn: {fileID: 1063499634}
   MenuBtn: {fileID: 1774020432}
+  finish2: {fileID: 1334707456}
   _pausePopup: {fileID: 2064708737}
 --- !u!114 &1133335760
 MonoBehaviour:

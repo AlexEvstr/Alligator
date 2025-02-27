@@ -7,7 +7,7 @@ using System.Linq;
 public class ForAWhileMode : MonoBehaviour
 {
     public WordManager wordManager;
-    public Text wordText, scoreText, titleText, timerText, finishScoreText;
+    public Text wordText, scoreText, titleText, timerText, finishScoreText, finishScoreText2;
     public Button guessedRightButton, skipButton;
     public GameObject FinishObject, AgainBtn, MenuBtn, finish2;
 
@@ -60,6 +60,7 @@ public class ForAWhileMode : MonoBehaviour
         _score++;
         scoreText.text = _score.ToString();
         finishScoreText.text = _score.ToString();
+        finishScoreText2.text = _score.ToString();
         ShowNextWord();
     }
 
