@@ -17,7 +17,7 @@ public class TeamMode : MonoBehaviour
     private List<string> _words;
     private int _currentWordIndex = 0;
     private int _score = 0;
-    private float _timer = 6f; // 1 минута
+    private float _timer = 60f; // 1 минута
     private int _skipCount = 0;
     private string[] _teamNames = new string[6];
     private int[] _teamScores = new int[6];
@@ -176,7 +176,7 @@ public class TeamMode : MonoBehaviour
 
     public void OnNextTeam()
     {
-        _timer = 6f; // Сбрасываем таймер
+        _timer = 60f; // Сбрасываем таймер
         CoinWithScore.SetActive(false);
         timerText.gameObject.SetActive(true);
         guessedRightButton.gameObject.SetActive(true);

@@ -14,7 +14,7 @@ public class ForAWhileMode : MonoBehaviour
     private List<string> _words;
     private int _currentWordIndex = 0;
     private int _score = 0;
-    private float _timer = 12f; // 2 минуты
+    private float _timer = 120f; // 2 минуты
 
     [SerializeField] private GameObject _pausePopup;
     public OptionsController optionsController;
